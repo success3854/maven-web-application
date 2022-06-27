@@ -1,0 +1,39 @@
+node{
+    def mavenhome = tool name: 'maven3.8.6'
+stage('1clonecode'){
+    git "https://github.com/success3854/maven-web-application"
+    //sh "git clone https://github.com/success3854/maven-web-application"
+    //bat "git clone https://github.com/success3854/maven-web-application"
+}
+stage('2test and build'){
+    sh "${mavenhome}/bin/mvn install"
+}    
+stage('3codequality'){
+    sh "${mavenhome}/bin/mvn sonar:sonar"
+}   
+stage('4uploadartifacts'){
+    sh "${mavenhome}/bin/mvn deploy"
+}  
+/*
+ stage('5deploy_uat'){
+    deploy adapters: [tomcat9(credentialsId: 'eboule', path: '', url: 'http://18.188.216.107:8080/')], contextPath: null, war: 'target/*war'
+
+ } 
+stage('6approval'){
+    timeout(time:9, unit:'HOURS'){
+        input message: 'Applicaton ready, please review and approve. Thanks!'
+    }
+}
+stage('7deploy_producttion'){
+    deploy adapters: [tomcat9(credentialsId: 'eboule', path: '', url: 'http://18.188.216.107:8080/')], contextPath: null, war: 'target/*war'
+
+ } 
+ stage('8email notification'){
+     emailext body: '''Best practice timely notification
+
+
+Regards,
+EttatechTechnologies''', recipientProviders: [contributor()], subject: 'best practice notification', to: 'feboule@yahoo.com'
+ }
+ */
+}
